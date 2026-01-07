@@ -18,3 +18,4 @@ layer.composite().save("layer.png")
 for layer in psd.descendants():
     if layer.is_visible() and not layer.is_group():
         layer.composite().save(f"{layer.name}.png")
+ 
