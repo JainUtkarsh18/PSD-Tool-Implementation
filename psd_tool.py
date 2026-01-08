@@ -1,21 +1,49 @@
-pip install psd-tools
-
+pip install psd-tools pillow
 from psd_tools import PSDImage
-psd = PSDImage.open("file.psd")
+from psd_tools.api.layers import TypeLayer
+import os
 
-print(psd.size, psd.color_mode)
+# Load PSD
+psd = PSDImage.open("sample.psd")
 
-for layer in psd:
-    print(layer.name, layer.visible)
+print("===== PSD METADATA =====")
+print("Size:", psd.size)
+print("Color Mode:", psd.color_mode)
+print("Depth:", psd.depth)
+print("Number of layers:", len(psd))
 
-if layer.is_group():
-    for sub in layer:
-        print(sub.name)
+# Output directories
+os.makedirs("exported_layers", exist_ok=True)
+os.makedirs("text_layers", exist_ok=True)
 
-psd.composite().save("full.png")
-layer.composite().save("layer.png")
+def traverse_layers(layers, level=0):
+    """Recursively traverse PSD layers"""
+    for layer in layers:
+        indent = "  " * level
+        print(f"{indent}- {layer.name} | Visible: {layer.visible}")
 
-for layer in psd.descendants():
-    if layer.is_visible() and not layer.is_group():
-        layer.composite().save(f"{layer.name}.png")
- 
+        # If layer is a group
+        if layer.is_group():
+            traverse_layers(layer, level + 1)
+        else:
+            # Export raster layer
+            if layer.visible and layer.has_pixels():
+                image = layer.composite()
+                output_path = f"exported_layers/{layer.name}.png"
+                image.save(output_path)
+                print(f"{indent}  ✔ Exported: {output_path}")
+
+            # Handle text layers
+            if isinstance(layer, TypeLayer):
+                text = layer.text
+                text_path = f"text_layers/{layer.name}.txt"
+                with open(text_path, "w", encoding="utf-8") as f:
+                    f.write(text)
+                print(f"{indent}  ✍ Text extracted: {text_path}")
+
+print("\n===== LAYER STRUCTURE =====")
+traverse_layers(psd)
+
+# Export full PSD composite
+psd.composite().save("full_composite.png")
+print("\n✔ Full PSD composite saved as full_composite.png")
