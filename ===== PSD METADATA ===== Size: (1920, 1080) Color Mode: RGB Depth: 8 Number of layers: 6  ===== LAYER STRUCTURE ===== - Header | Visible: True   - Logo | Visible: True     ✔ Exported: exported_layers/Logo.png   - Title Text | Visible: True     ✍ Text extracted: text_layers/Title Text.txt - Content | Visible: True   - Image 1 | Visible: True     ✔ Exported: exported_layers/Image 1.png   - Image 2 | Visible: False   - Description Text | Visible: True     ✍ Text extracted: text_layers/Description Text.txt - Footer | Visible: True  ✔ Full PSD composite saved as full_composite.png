@@ -1,0 +1,19 @@
+===== PSD METADATA =====
+Size: (1920, 1080)
+Color Mode: RGB
+Depth: 8
+Number of layers: 6
+
+===== LAYER STRUCTURE =====
+- Header | Visible: True
+  - Logo | Visible: True
+    ✔ Exported: exported_layers/Logo.png
+  - Title Text | Visible: True
+     Text extracted: text_layers/Title Text.txt
+- Content | Visible: True
+  - Image 1 | Visible: True
+    ✔ Exported: exported_layers/Image 1.png
+  - Image 2 | Visible: False
+  - Description Text | Visible: True
+     Text extracted: text_layers/Description Text.txt
+- Footer | Visible: True
