@@ -3,7 +3,7 @@ from psd_tools import PSDImage
 from psd_tools.api.layers import TypeLayer
 import os
 
-# Load PSD
+# Load PSD 
 psd = PSDImage.open("sample.psd")
 
 print("===== PSD METADATA =====")
